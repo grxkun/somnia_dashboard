@@ -27,7 +27,10 @@ export default function ChannelList({ onViewChannel }: ChannelListProps) {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: 'getUserChannels',
-    args: [address],
+    args: [address as `0x${string}`],
+    query: {
+      enabled: !!address, // Only call when address is defined
+    },
   });
 
   // Get channel details for each channel ID
@@ -38,6 +41,9 @@ export default function ChannelList({ onViewChannel }: ChannelListProps) {
       functionName: 'getChannel',
       args: [id],
     })),
+    query: {
+      enabled: !!address && !!channelIds && (channelIds as bigint[]).length > 0, // Only call when address and channelIds are available
+    },
   });
 
   useEffect(() => {
@@ -58,6 +64,21 @@ export default function ChannelList({ onViewChannel }: ChannelListProps) {
       setLoading(false);
     }
   }, [channelIds, channelData]);
+
+  // Early return if no address is connected - after all hooks
+  if (!address) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Connect Your Wallet</h3>
+        <p className="text-gray-600">Please connect your wallet to view your payment channels.</p>
+      </div>
+    );
+  }
 
   const getChannelStatus = (channel: Channel) => {
     if (channel.inDispute) return { text: 'In Dispute', color: 'text-red-600 bg-red-100' };
@@ -95,7 +116,7 @@ export default function ChannelList({ onViewChannel }: ChannelListProps) {
           </svg>
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-2">No Payment Channels</h3>
-        <p className="text-gray-600 mb-6">You haven't created or joined any payment channels yet.</p>
+        <p className="text-gray-600 mb-6">You haven&apos;t created or joined any payment channels yet.</p>
         <button className="btn btn-primary">Create Your First Channel</button>
       </div>
     );

@@ -70,6 +70,8 @@ npm run dev
 
 ### Deployment
 
+#### Local Deployment
+
 1. Deploy to Somnia Network:
 ```bash
 npm run deploy
@@ -82,6 +84,91 @@ npm run deploy
 npm run build
 npm start
 ```
+
+#### Vercel Deployment
+
+Deploy your Somnia Dashboard to Vercel with these steps:
+
+1. **Fork or Clone the Repository**
+   ```bash
+   git clone https://github.com/grxkun/somnia_dashboard.git
+   cd somnia_dashboard
+   ```
+
+2. **Install Vercel CLI** (if not already installed)
+   ```bash
+   npm install -g vercel
+   ```
+
+3. **Set Up Environment Variables**
+   
+   Create a `.env.local` file from the example:
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Update the variables in `.env.local`:
+   ```env
+   # Required for Vercel deployment
+   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_walletconnect_project_id
+   NEXT_PUBLIC_SOMNIA_RPC_URL=https://rpc.somnia.network
+   NEXT_PUBLIC_CONTRACT_ADDRESS=your_deployed_contract_address
+   
+   # Only needed for contract deployment (keep private)
+   PRIVATE_KEY=your_deployment_private_key
+   ```
+
+4. **Deploy Smart Contract** (if not already deployed)
+   ```bash
+   npm run compile
+   npm run deploy
+   ```
+   
+   After deployment, update `NEXT_PUBLIC_CONTRACT_ADDRESS` in your environment variables.
+
+5. **Deploy to Vercel**
+   
+   **Option A: Using Vercel CLI**
+   ```bash
+   vercel --prod
+   ```
+   
+   **Option B: Using Vercel Dashboard**
+   - Go to [vercel.com](https://vercel.com) and sign in
+   - Click "New Project"
+   - Import your GitHub repository
+   - Configure environment variables in the Vercel dashboard:
+     - `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
+     - `NEXT_PUBLIC_SOMNIA_RPC_URL`
+     - `NEXT_PUBLIC_CONTRACT_ADDRESS`
+   - Click "Deploy"
+
+6. **Configure Environment Variables in Vercel Dashboard**
+   - Go to your project settings in Vercel
+   - Navigate to "Environment Variables"
+   - Add the following variables:
+     
+     | Name | Value | Environment |
+     |------|-------|-------------|
+     | `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | Your WalletConnect Project ID | Production, Preview, Development |
+     | `NEXT_PUBLIC_SOMNIA_RPC_URL` | `https://rpc.somnia.network` | Production, Preview, Development |
+     | `NEXT_PUBLIC_CONTRACT_ADDRESS` | Your deployed contract address | Production, Preview, Development |
+
+7. **Get WalletConnect Project ID**
+   - Visit [WalletConnect Cloud](https://cloud.walletconnect.com/)
+   - Create a new project
+   - Copy the Project ID and use it for `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
+
+8. **Redeploy** (if you added environment variables after initial deployment)
+   ```bash
+   vercel --prod
+   ```
+
+**Important Notes for Vercel:**
+- All environment variables that need to be accessible in the browser must have the `NEXT_PUBLIC_` prefix
+- Environment variables are set at build time, so redeploy after making changes
+- The contract must be deployed to Somnia Network before the frontend deployment
+- Make sure your WalletConnect Project ID is configured for your domain
 
 ## How It Works
 
