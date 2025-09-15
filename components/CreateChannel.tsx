@@ -38,7 +38,7 @@ export default function CreateChannel({ onChannelCreated }: CreateChannelProps) 
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: 'openChannel',
-        args: [formData.participant2, challengePeriodInSeconds],
+        args: [formData.participant2 as `0x${string}`, challengePeriodInSeconds],
         value: parseEther(formData.initialDeposit),
       });
     } catch (err) {
@@ -184,10 +184,10 @@ export default function CreateChannel({ onChannelCreated }: CreateChannelProps) 
             <strong>2. Off-chain Payments:</strong> Exchange signed payment commitments instantly without blockchain transactions.
           </p>
           <p>
-            <strong>3. Channel Closure:</strong> Settle final balances on-chain when you're done transacting.
+            <strong>3. Channel Closure:</strong> Settle final balances on-chain when you&apos;re done transacting.
           </p>
           <p>
-            <strong>4. Dispute Resolution:</strong> If there's disagreement, the smart contract ensures fair resolution.
+            <strong>4. Dispute Resolution:</strong> If there&apos;s disagreement, the smart contract ensures fair resolution.
           </p>
         </div>
       </div>
